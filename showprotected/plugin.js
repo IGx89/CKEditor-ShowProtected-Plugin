@@ -1,5 +1,7 @@
 /*
  *  "showprotected" CKEditor plugin
+ *  http://ckeditor.com/addon/showprotected
+ *  https://github.com/IGx89/CKEditor-ShowProtected-Plugin
  *  
  *  Created by Matthew Lieder (https://github.com/IGx89)
  *  
