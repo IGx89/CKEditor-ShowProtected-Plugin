@@ -25,4 +25,13 @@ Licensed under the terms of the MIT, GPL LGPL and MPL licenses.
 
 ````
 config.extraPlugins = 'showprotected';
+
+// Add regular expressions marking the sections you want protected
+// (see http://docs.ckeditor.com/#!/api/CKEDITOR.config-cfg-protectedSource)
+// Examples:
+config.protectedSource.push( /<\?[\s\S]*?\?>/g ); // PHP
+config.protectedSource.push( /\[@[\s\S]*?\/]/g ); // Freemarker
+config.protectedSource.push( /\[#[\s\S]*?]/g ); // Freemarker
+config.protectedSource.push( /\[\/#[\s\S]*?]/g ); // Freemarker
+config.protectedSource.push( /\${[\s\S]*?}/g ); // Freemarker
 ````
