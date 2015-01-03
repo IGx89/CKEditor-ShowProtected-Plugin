@@ -10,7 +10,7 @@ CKEDITOR.dialog.add( 'showProtectedDialog', function( editor ) {
 			
 			var encodedSourceValue = CKEDITOR.plugins.showprotected.encodeProtectedSource( newSourceValue );
 			
-			this._.selectedElement.setAttribute('data-cke-realelement', encodedSourceValue);
+			this._.selectedElement.getPrevious().$.nodeValue = encodedSourceValue;
 			this._.selectedElement.setAttribute('title', newSourceValue);
 			this._.selectedElement.setAttribute('alt', newSourceValue);
 		},
@@ -22,7 +22,8 @@ CKEDITOR.dialog.add( 'showProtectedDialog', function( editor ) {
 		onShow: function() {
 			this._.selectedElement = editor.getSelection().getSelectedElement();
 			
-			var decodedSourceValue = CKEDITOR.plugins.showprotected.decodeProtectedSource( this._.selectedElement.getAttribute('data-cke-realelement') );
+			var encodedSourceValue = this._.selectedElement.getPrevious().$.nodeValue;
+			var decodedSourceValue = CKEDITOR.plugins.showprotected.decodeProtectedSource( encodedSourceValue );
 
 			this.setValueOf( 'info', 'txtProtectedSource', decodedSourceValue );
 		},
