@@ -10,19 +10,17 @@ CKEDITOR.dialog.add( 'showProtectedDialog', function( editor ) {
 			
 			var encodedSourceValue = CKEDITOR.plugins.showprotected.encodeProtectedSource( newSourceValue );
 			
-			this._.selectedElement.getPrevious().$.nodeValue = encodedSourceValue;
-			this._.selectedElement.setAttribute('title', newSourceValue);
-			this._.selectedElement.setAttribute('alt', newSourceValue);
+			CKEDITOR.plugins.showprotected.selectedElement.$.previousSibling.nodeValue = encodedSourceValue;
+			CKEDITOR.plugins.showprotected.selectedElement.setAttribute('title', newSourceValue);
+			CKEDITOR.plugins.showprotected.selectedElement.setAttribute('alt', newSourceValue);
 		},
 
 		onHide: function() {
-			delete this._.selectedElement;
+			CKEDITOR.plugins.showprotected.selectedElement = undefined;
 		},
 
 		onShow: function() {
-			this._.selectedElement = editor.getSelection().getSelectedElement();
-			
-			var encodedSourceValue = this._.selectedElement.getPrevious().$.nodeValue;
+			var encodedSourceValue = CKEDITOR.plugins.showprotected.selectedElement.$.previousSibling.nodeValue;
 			var decodedSourceValue = CKEDITOR.plugins.showprotected.decodeProtectedSource( encodedSourceValue );
 
 			this.setValueOf( 'info', 'txtProtectedSource', decodedSourceValue );

@@ -1,7 +1,5 @@
 /*
  *  "showprotected" CKEditor plugin
- *  http://ckeditor.com/addon/showprotected
- *  https://github.com/IGx89/CKEditor-ShowProtected-Plugin
  *  
  *  Created by Matthew Lieder (https://github.com/IGx89)
  *  
@@ -21,13 +19,15 @@ CKEDITOR.plugins.add( 'showprotected', {
 		var iconPath = CKEDITOR.getUrl( this.path + 'images' + '/code.gif' ),
 			baseStyle = 'background:url(' + iconPath + ') no-repeat %1 center;border:1px dotted #00f;background-size:16px;';
 
-		var template = '.%2 img.cke_protected' +
+		var template = '.%2 showprotected-img.cke_protected' +
 			'{' +
 				baseStyle +
+				'display:block;' +
 				'width:16px;' +
 				'min-height:15px;' +
-				// The default line-height on IE.
+				'line-height:1.6em;' +
 				'height:1.15em;' +
+				'cursor:default;' +
 				// Opera works better with "middle" (even if not perfect)
 				'vertical-align:' + ( CKEDITOR.env.opera ? 'middle' : 'text-bottom' ) + ';' +
 			'}';
@@ -46,7 +46,8 @@ CKEDITOR.plugins.add( 'showprotected', {
 		editor.on( 'doubleclick', function( evt ) {
 			var element = evt.data.element;
 
-			if ( element.is( 'img' ) && element.hasClass( 'cke_protected' ) ) {
+			if ( element.is( 'showprotected-img' ) ) {
+				CKEDITOR.plugins.showprotected.selectedElement = element;
 				evt.data.dialog = 'showProtectedDialog';
 			}
 		} );
@@ -68,7 +69,7 @@ CKEDITOR.plugins.add( 'showprotected', {
 
 						var cleanedCommentText = CKEDITOR.plugins.showprotected.decodeProtectedSource( commentText );
 						
-						var fakeElement = new CKEDITOR.htmlParser.element( 'img', {
+						var fakeElement = new CKEDITOR.htmlParser.element( 'showprotected-img', {
 							'class': 'cke_protected',
 							'data-cke-showprotected-temp': true,
 							alt: cleanedCommentText,
@@ -88,31 +89,12 @@ CKEDITOR.plugins.add( 'showprotected', {
 		if ( htmlFilter ) {
 			htmlFilter.addRules( {
 				elements: {
-					$: function( element ) {
-						// If the placeholder image was put under a parent where img's aren't valid (like table.tbody.tr), CKEditor moves it up.
-						// When it moves all the way up to root, it creates a new <p> element to contain the img. This code here removes that <p> element.
-						if(element.name == 'p' && element.children.length > 0) {
-							var allChildrenAreTemps = true;
-							
-							for(var i=0; i<element.children.length; i++) {
-								if(!element.children[i].attributes || !element.children[i].attributes['data-cke-showprotected-temp']) {
-									allChildrenAreTemps = false;
-									break;
-								}
-							}
-							
-							if(allChildrenAreTemps) {
-								return false;
-							}
-						}
-						
+					'showprotected-img': function( element ) {
 						// remove the placeholder image so it doesn't show in the source code
-						if(element.attributes['data-cke-showprotected-temp']) {
-							return false;
-						}
+						return false;
 					}
 				}
-			} );
+			}, -10 );
 		}
 	}
 } );
