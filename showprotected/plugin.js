@@ -17,12 +17,14 @@ CKEDITOR.plugins.add( 'showprotected', {
 	onLoad: function() {
 		// Add the CSS styles for protected source placeholders.
 		var iconPath = CKEDITOR.getUrl( this.path + 'images' + '/code.gif' ),
-			baseStyle = 'background:url(' + iconPath + ') no-repeat %1 center;border:1px dotted #00f;background-size:16px;';
+			baseStyle = 'background:url(' + iconPath + ') no-repeat %1 center;';
 
 		var template = '.%2 showprotected-img.cke_protected' +
 			'{' +
 				baseStyle +
-				'display:block;' +
+				"border:1px dotted #00f;" +
+				"background-size:16px;" +
+				'display:inline;' +
 				'width:16px;' +
 				'min-height:15px;' +
 				'line-height:1.6em;' +
@@ -75,6 +77,7 @@ CKEDITOR.plugins.add( 'showprotected', {
 							alt: cleanedCommentText,
 							title: cleanedCommentText
 						} );
+						CKEDITOR.plugins.showprotected.applyCustomImage(fakeElement, cleanedCommentText);
 						fakeElement.insertAfter(commentElement);
 						
 						return commentText;
@@ -122,6 +125,42 @@ CKEDITOR.plugins.showprotected = {
 	encodeProtectedSource: function( protectedSource ) {
 		return CKEDITOR.plugins.showprotected.protectedSourceMarker +
         	encodeURIComponent( protectedSource ).replace( /--/g, '%2D%2D' );
-	}
+	},
+    
+	applyCustomImage: function(element, text) {
+		var iconPath = CKEDITOR.plugins.showprotected.getCustomDisplay(text);
+		if (iconPath) {
+			var style;
+			if (typeof iconPath == "string") {
+				style = 'background-image: url(' + iconPath + ');'
+			} else {
+				style = [];
+				for(var key in iconPath) {
+					if (iconPath.hasOwnProperty(key)) {
+						style.push(key + ": " + iconPath[key]);
+					}
+				}
+				style = style.join(";")
+			}
+			if (element.setAttribute) {
+				element.setAttribute('style', style);
+			} else {
+				element.attributes['style'] = style;
+			}
+		} else {
+			if (element.setAttribute) {
+				element.setAttribute('style', '');
+			} else {
+				element.attributes['style'] = '';
+			}
+		}
+	},
+
+	getCustomDisplay: function(text) {
+		if (CKEDITOR.config.showprotected && CKEDITOR.config.showprotected.elementsMap && CKEDITOR.config.showprotected.elementsMap[text]) {
+			return CKEDITOR.config.showprotected.elementsMap[text]
+		}
+		return undefined;
+	 }
 	
 };
