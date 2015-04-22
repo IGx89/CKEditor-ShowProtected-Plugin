@@ -24,7 +24,7 @@ CKEDITOR.plugins.add( 'showprotected', {
 				baseStyle +
 				"border:1px dotted #00f;" +
 				"background-size:16px;" +
-				'display:block;' +
+				'display:inline;' +
 				'width:16px;' +
 				'min-height:15px;' +
 				'line-height:1.6em;' +
