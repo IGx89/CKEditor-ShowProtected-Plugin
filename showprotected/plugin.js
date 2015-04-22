@@ -17,11 +17,13 @@ CKEDITOR.plugins.add( 'showprotected', {
 	onLoad: function() {
 		// Add the CSS styles for protected source placeholders.
 		var iconPath = CKEDITOR.getUrl( this.path + 'images' + '/code.gif' ),
-			baseStyle = 'background:url(' + iconPath + ') no-repeat %1 center;border:1px dotted #00f;background-size:16px;';
+			baseStyle = 'background:url(' + iconPath + ') no-repeat %1 center;';
 
 		var template = '.%2 showprotected-img.cke_protected' +
 			'{' +
 				baseStyle +
+				"border:1px dotted #00f;" +
+				"background-size:16px;" +
 				'display:block;' +
 				'width:16px;' +
 				'min-height:15px;' +
@@ -75,6 +77,7 @@ CKEDITOR.plugins.add( 'showprotected', {
 							alt: cleanedCommentText,
 							title: cleanedCommentText
 						} );
+						CKEDITOR.plugins.showprotected.applyCustomImage(fakeElement, cleanedCommentText);
 						fakeElement.insertAfter(commentElement);
 						
 						return commentText;
@@ -122,6 +125,30 @@ CKEDITOR.plugins.showprotected = {
 	encodeProtectedSource: function( protectedSource ) {
 		return CKEDITOR.plugins.showprotected.protectedSourceMarker +
         	encodeURIComponent( protectedSource ).replace( /--/g, '%2D%2D' );
-	}
+	},
+    
+	applyCustomImage: function(element, text) {
+		var iconPath = CKEDITOR.plugins.showprotected.getSpecificPath(text);
+		if (iconPath) {
+			if (element.setAttribute) {
+				element.setAttribute('style', 'background-image: url(' + iconPath + ');');
+			} else {
+				element.attributes['style'] = 'background-image: url(' + iconPath + ');';
+			}
+		} else {
+			if (element.setAttribute) {
+				element.setAttribute('style', '');
+			} else {
+				element.attributes['style'] = '';
+			}
+		}
+	},
+
+	getSpecificPath: function(text) {
+		if (CKEDITOR.config.showprotected && CKEDITOR.config.showprotected.elementsMap && CKEDITOR.config.showprotected.elementsMap[text]) {
+			return CKEDITOR.config.showprotected.elementsMap[text]
+		}
+		return undefined;
+	 }
 	
 };

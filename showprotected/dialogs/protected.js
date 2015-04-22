@@ -13,6 +13,7 @@ CKEDITOR.dialog.add( 'showProtectedDialog', function( editor ) {
 			CKEDITOR.plugins.showprotected.selectedElement.$.previousSibling.nodeValue = encodedSourceValue;
 			CKEDITOR.plugins.showprotected.selectedElement.setAttribute('title', newSourceValue);
 			CKEDITOR.plugins.showprotected.selectedElement.setAttribute('alt', newSourceValue);
+			CKEDITOR.plugins.showprotected.applyCustomImage(CKEDITOR.plugins.showprotected.selectedElement, newSourceValue);
 		},
 
 		onHide: function() {
