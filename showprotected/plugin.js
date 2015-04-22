@@ -128,12 +128,24 @@ CKEDITOR.plugins.showprotected = {
 	},
     
 	applyCustomImage: function(element, text) {
-		var iconPath = CKEDITOR.plugins.showprotected.getSpecificPath(text);
+		var iconPath = CKEDITOR.plugins.showprotected.getCustomDisplay(text);
 		if (iconPath) {
-			if (element.setAttribute) {
-				element.setAttribute('style', 'background-image: url(' + iconPath + ');');
+			var style;
+			if (typeof iconPath == "string") {
+				style = 'background-image: url(' + iconPath + ');'
 			} else {
-				element.attributes['style'] = 'background-image: url(' + iconPath + ');';
+				style = [];
+				for(var key in iconPath) {
+					if (iconPath.hasOwnProperty(key)) {
+						style.push(key + ": " + iconPath[key]);
+					}
+				}
+				style = style.join(";")
+			}
+			if (element.setAttribute) {
+				element.setAttribute('style', style);
+			} else {
+				element.attributes['style'] = style;
 			}
 		} else {
 			if (element.setAttribute) {
@@ -144,7 +156,7 @@ CKEDITOR.plugins.showprotected = {
 		}
 	},
 
-	getSpecificPath: function(text) {
+	getCustomDisplay: function(text) {
 		if (CKEDITOR.config.showprotected && CKEDITOR.config.showprotected.elementsMap && CKEDITOR.config.showprotected.elementsMap[text]) {
 			return CKEDITOR.config.showprotected.elementsMap[text]
 		}
