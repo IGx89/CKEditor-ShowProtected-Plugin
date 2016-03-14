@@ -22,7 +22,7 @@ CKEDITOR.plugins.add( 'showprotected', {
 		var template = '.%2 showprotected-img.cke_protected' +
 			'{' +
 				baseStyle +
-				'display:block;' +
+				'display:inline-block;' +
 				'width:16px;' +
 				'min-height:15px;' +
 				'line-height:1.6em;' +
