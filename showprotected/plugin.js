@@ -21,15 +21,12 @@ CKEDITOR.plugins.add( 'showprotected', {
 
 		var template = '.%2 showprotected-img.cke_protected' +
 			'{' +
-				baseStyle +
-				'display:block;' +
-				'width:16px;' +
-				'min-height:15px;' +
-				'line-height:1.6em;' +
-				'height:1.15em;' +
-				'cursor:default;' +
-				// Opera works better with "middle" (even if not perfect)
-				'vertical-align:' + ( CKEDITOR.env.opera ? 'middle' : 'text-bottom' ) + ';' +
+			baseStyle +
+			'display:inline-block;' +
+			'min-height:15px;' +
+			'height:1.15em;' +
+			'cursor:pointer;' +
+			'padding:3px 3px 3px 16px;' +
 			'}';
 
 		// Styles with contents direction awareness.
@@ -75,8 +72,9 @@ CKEDITOR.plugins.add( 'showprotected', {
 							alt: cleanedCommentText,
 							title: cleanedCommentText
 						} );
+						fakeElement.setHtml(cleanedCommentText);
 						fakeElement.insertAfter(commentElement);
-						
+
 						return commentText;
 					}
 					
